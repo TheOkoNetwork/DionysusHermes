@@ -1,0 +1,63 @@
+{{page-title "Order " @model.order.id}}
+
+<div
+    class="block p-6 max-w-sm bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Order #{{@model.order.id}}</h5>
+    <p class="font-normal text-gray-700 dark:text-gray-400">{{@model.order.event.name}}</p>
+    <p class="font-normal text-gray-700 dark:text-gray-400">{{@model.order.event.dateTimeUser}}</p>
+    <p class="font-normal text-gray-700 dark:text-gray-400">{{@model.order.event.description}}</p>
+</div>
+
+<p class="text-l">Tickets</p>
+<div class="grid overflow-hidden grid-cols-4 grid-rows-1 gap-2">
+    {{#each @model.tickets as |ticket|}}
+    <div class="box">{{ticket.id}}</div>
+
+    {{#if ticket.claimed}}
+    <div class="box">{{ticket.name}}</div>
+    {{else}}
+    <div class="box">
+
+        <button
+            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            type="button" type="button" data-modal-toggle="modal_ticket_claim_{{ticket.id}}">Claim ticket</button>
+        <ClaimTicket @ticket={{ticket}} @refreshRoute={{this.refreshRoute}} />
+    </div>
+    {{/if}}
+
+    {{#if ticket.claimed}}
+    <div class="box">
+        <button
+            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            type="button" type="button" data-modal-toggle="modal_ticket_view_{{ticket.id}}">Open ticket</button>
+        <ViewTicket @ticket={{ticket}} @refreshRoute={{this.refreshRoute}} />
+    </div>
+    {{else}}
+    <div class="box"></div>
+    {{/if}}
+
+    {{#if ticket.claimed}}
+    {{#if ticket.transferable}}
+    <div class="box">
+        <button
+            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            type="button" type="button" data-modal-toggle="modal_ticket_transfer_{{ticket.id}}">Transfer ticket</button>
+        <TransferTicket @ticket={{ticket}} @refreshRoute={{this.refreshRoute}} />
+    </div>
+    {{else}}
+    <div class="box"></div>
+    {{/if}}
+    {{else}}
+    <div class="box"></div>
+    {{/if}}
+
+
+    {{/each}}
+</div>
+
+
+
+
+
+
+{{outlet}}
