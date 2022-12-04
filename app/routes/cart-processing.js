@@ -5,16 +5,19 @@ import { inject as service } from '@ember/service';
 export default class CartProessingRoute extends Route {
   @service cart;
   @service router;
+  @service logging;
+
   async checkPaymentStatus() {
-    console.log('Checking for cart payment status');
+    this.logging.logtail.info('Checking payment status');
     await this.cart.refreshCart();
     const cart = this.cart.cart;
     switch (cart.paymentStatus) {
       case 'PAID':
+        this.logging.logtail.info('Cart now paid');
         this.cart.redirectToOrder();
         break;
       default:
-        console.log('Still not paid yet');
+        this.logging.logtail.info('Cart not paid yet');
         later(this, this.checkPaymentStatus, 1000);
     }
   }

@@ -38,7 +38,6 @@ export default class MsalService extends Service {
   }
   get msal() {
     if (!msalInstance) {
-      console.log(Msal);
       msalInstance = new Msal.PublicClientApplication({
         auth: {
           clientId: '81173864-6ca0-4380-b943-63fe7e4a519f',
@@ -47,8 +46,8 @@ export default class MsalService extends Service {
           knownAuthorities: [
             'https://okonetworkb2c.b2clogin.com/okonetworkb2c.onmicrosoft.com/B2C_1_camelotTest',
           ],
-          redirectUri: 'https://map.dionysusticketing.app/auth',
-          postLogoutRedirectUri: 'https://map.dionysusticketing.app/',
+          redirectUri: 'https://map.hermes.dionysusticketing.app/auth',
+          postLogoutRedirectUri: 'https://map.hermes.dionysusticketing.app/',
           navigateToLoginRequestUrl: true,
           validateAuthority: false,
           cacheLocation: 'localStorage',
@@ -66,7 +65,6 @@ export default class MsalService extends Service {
   }
 
   async idToken() {
-    console.log(this.msal);
     const account = await this.msal.getActiveAccount();
     if (account) {
       try {

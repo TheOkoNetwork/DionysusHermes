@@ -46,7 +46,7 @@ module.exports = function (environment) {
   }
 
   if (environment === 'production') {
-    ENV.OLYMPUS = 'https://olympus.dionysusticketing.app';
+    ENV.OLYMPUS = 'https://dionysusolympus.azurewebsites.net';
   }
 
   return ENV;

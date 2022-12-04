@@ -8,6 +8,7 @@ export default class EventController extends Controller {
   @service router;
   @service cart;
   @service toast;
+  @service logging;
 
   @tracked
   _selectedQty = 0;
@@ -24,10 +25,12 @@ export default class EventController extends Controller {
   @action
   async addToCart() {
     if (this.selectedQty <= 0) {
-      console.log(`Cannot add nothing to cart`);
+      this.logging.logtail.info('No quantity selected, unable to add to cart');
       return;
     }
-    console.log(`Adding ${this.selectedQty} to cart`);
+    this.logging.logtail.info('Adding to cart', {
+      selectedQty: this.selectedQty,
+    });
     const fetchRes = await fetch(`${config.OLYMPUS}/cart`, {
       method: 'POST',
       headers: {
@@ -40,12 +43,16 @@ export default class EventController extends Controller {
     }).then((response) => {
       return response.json();
     });
-    console.log(fetchRes);
+
+    this.logging.logtail.info('Add to cart response', fetchRes);
     if (fetchRes.status) {
       this.cart.cart = fetchRes.cart;
+      this.logging.logtail.info('Cart updated after cart add', {
+        cart: this.cart.cart,
+      });
       this.router.transitionTo('cart');
     } else {
-      console.log(`Error adding to cart: ${fetchRes.message}`);
+      this.logging.logtail.error('Add to cart failed', fetchRes);
       this.toast.error(fetchRes.message, 'Failed adding to cart');
     }
   }

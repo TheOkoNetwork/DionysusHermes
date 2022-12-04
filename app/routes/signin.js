@@ -4,32 +4,36 @@ import { inject as service } from '@ember/service';
 export default class SigninRoute extends Route {
   @service msal;
   @service router;
+  @service logging;
 
   async model() {
-    console.log(this.msal);
     const msal = this.msal.msal;
-    console.log(msal);
     try {
       if (msal.getAllAccounts().length > 0) {
-        console.log('User is already signed in');
-        console.log(msal.getActiveAccount());
+        this.logging.logtail.info(
+          'User is already signed in',
+          msal.getActiveAccount()
+        );
         try {
           await msal.ssoSilent();
         } catch (err) {
-          console.log(err);
+          this.logging.logtail.error(err);
           this.msal.signout();
         }
         this.router.transitionTo('index');
         return msal.getAllAccounts()[0];
       }
       const redirectResult = await msal.handleRedirectPromise();
-      console.log(redirectResult);
+      this.logging.logtail.info('signinRedirectResult', redirectResult);
       if (redirectResult && redirectResult.account) {
-        console.log(
+        this.logging.logtail.info(
           'User is freshly signed in (redirect result), setting active account'
         );
         await msal.setActiveAccount(redirectResult.account);
-        console.log(msal.getActiveAccount());
+        this.logging.logtail.info(
+          'Set active account',
+          msal.getActiveAccount()
+        );
         await msal.ssoSilent();
         location.href = '/';
         return;
@@ -39,8 +43,9 @@ export default class SigninRoute extends Route {
       if (accounts.length === 0) {
         msal.loginRedirect();
       } else {
-        console.log(accounts);
-        console.log(
+        this.logging.logtail.info('MSAL accounts', accounts);
+
+        this.logging.logtail.info(
           'User isnt freshly signed in, but has at least one signed in account, setting active account to first'
         );
 
@@ -49,7 +54,7 @@ export default class SigninRoute extends Route {
         return;
       }
     } catch (error) {
-      console.log(error);
+      this.logging.logtail.error(error);
       location.href = '/';
     }
   }

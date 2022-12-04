@@ -5,13 +5,14 @@ import { inject as service } from '@ember/service';
 
 export default class OrderSuccessRoute extends Route {
   @service msal;
+  @service logging;
 
   model(params) {
     if (!this.msal.isAuthenticated) {
       return this.msal.redirectToSignIn();
     }
 
-    console.log(`In order success, Fetching order by key: ${params.key}`);
+    this.logging.logtail.info('Fetching order`, {orderKey: params.key}');
     const orderPromise = fetch(`${config.OLYMPUS}/order/${params.key}`).then(
       function (response) {
         return response.json();
@@ -21,12 +22,13 @@ export default class OrderSuccessRoute extends Route {
       order: orderPromise,
     })
       .then((modelData) => {
-        console.log('Modal data is:', modelData);
+        this.logging.logtail.info('Order model data response', modelData);
         modelData.order = modelData.order.order;
+        this.logging.logtail.info('Order model data', modelData);
         return modelData;
       })
       .catch((reason) => {
-        console.log('rejected', reason);
+        this.logging.logtail.error(reason);
       });
   }
 }
