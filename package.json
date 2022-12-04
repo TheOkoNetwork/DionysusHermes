@@ -85,7 +85,7 @@
     "@azure/msal-browser": "^2.26.0",
     "@logtail/browser": "^0.1.12",
     "flowbite": "^1.4.7",
-    "moment": "^2.29.3",
+    "moment": "^2.29.4",
     "scandit-sdk": "^5.12.0"
   }
 }
