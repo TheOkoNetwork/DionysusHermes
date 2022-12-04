@@ -5,6 +5,7 @@ import { inject as service } from '@ember/service';
 export default class CartService extends Service {
   @service router;
   @service msal;
+  @service logging;
 
   _cart = {};
 
@@ -21,13 +22,14 @@ export default class CartService extends Service {
   }
   refreshCart = async function () {
     const cart = JSON.parse(localStorage.cart);
-    console.log(cart);
     const cartData = await fetch(`${config.OLYMPUS}/cart/${cart.key}`).then(
       function (response) {
         return response.json();
       }
     );
-    console.log('refreshed cartData', cartData.cart);
+    this.logging.logtail.info('refreshed cartData', {
+      cart: cartData.cart,
+    });
     this._cart = cartData.cart;
   };
 
@@ -48,7 +50,9 @@ export default class CartService extends Service {
     }).then(function (response) {
       return response.json();
     });
-    console.log('cartPayment', cartPayment);
+    this.logging.logtail.info('cartPayment', {
+      cartPayment: cartPayment,
+    });
     if (cartPayment.status) {
       window.location.href = cartPayment.url;
     }
@@ -65,15 +69,23 @@ export default class CartService extends Service {
     }).then(function (response) {
       return response.json();
     });
-    console.log('cartOrder', cartOrder);
+    this.logging.logtail.info('cartOrder response', {
+      cartOrder: cartOrder,
+    });
     if (cartOrder.status) {
-      console.log(cartOrder);
-      console.log(cartOrder.order);
+      this.logging.logtail.info('cartOrder success', {
+        cartOrder: cartOrder,
+      });
       if (cartOrder.status) {
-        console.log(`Redirecting to order: ${cartOrder.order.key} from cart`);
+        this.logging.logtail.info(
+          `Redirecting to order: ${cartOrder.order.key} from cart`
+        );
         this.router.transitionTo('orderSuccess', cartOrder.order.key);
         this.resetCart();
       } else {
+        this.logging.logtail.error('cartOrder failed', {
+          cartOrder: cartOrder,
+        });
         window.location.reload();
       }
     }

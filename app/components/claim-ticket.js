@@ -4,17 +4,18 @@ import { service } from '@ember/service';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 
-export default class HeaderComponent extends Component {
+export default class ClaimTicketComponent extends Component {
   @service msal;
   @service router;
   @tracked name;
   @service toast;
+  @service logging;
 
   //this is a hack to get flowbite ui components to work
   // eslint-disable-next-line ember/no-component-lifecycle-hooks
   @action
   didInsert() {
-    console.log('ClaimTicketComponent didInsert');
+    this.logging.logtail.info('ClaimTicketComponent did insert');
     let ev = document.createEvent('Event');
     ev.initEvent('DOMContentLoaded', true, true);
     window.document.dispatchEvent(ev);
@@ -26,7 +27,10 @@ export default class HeaderComponent extends Component {
   }
   @action
   async claim() {
-    console.log(`Claiming ticket: ${this.args.ticket.id} for ${this.name}`);
+    this.logging.logtail.info('Claiming ticket', {
+      id: this.args.ticket.id,
+      name: this.name,
+    });
     const claimResult = await fetch(
       `${config.OLYMPUS}/tickets/${this.args.ticket.id}/claim`,
       {
@@ -42,14 +46,19 @@ export default class HeaderComponent extends Component {
     ).then(function (response) {
       return response.json();
     });
-    console.log(claimResult);
+    this.logging.logtail.info('Claim ticket response', claimResult);
+
     if (claimResult.status) {
-      console.log('Claimed ticket');
+      this.logging.logtail.info('Ticket claimed', {
+        ticketId: this.args.ticket.id,
+      });
       window.alert("You've claimed the ticket!");
-      console.log(this.args);
       this.router.refresh();
     } else {
-      console.log('Failed to claim ticket');
+      this.logging.logtail.info('Ticket claim failure', {
+        ticketId: this.args.ticket.id,
+        message: claimResult.message,
+      });
       this.toast.error(claimResult.message, 'Error claiming ticket');
     }
   }
