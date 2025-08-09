@@ -33,7 +33,7 @@ interface PageProps {
 
 export default function Page() {
   const { order_id } = useParams();
-
+  console.log(`Using order_id: ${order_id}`)
   const [order, setOrder] = useState<Order | null>(null);
   const { theme } = useTheme(); // Get current theme
   const [loading, setLoading] = useState(true);
