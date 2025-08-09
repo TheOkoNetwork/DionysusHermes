@@ -2,6 +2,7 @@
 import { create } from "zustand";
 
 interface Config {
+  error: string;
   name: string;
   slogan: string;
   logo: string;
