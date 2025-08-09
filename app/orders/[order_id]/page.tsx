@@ -25,12 +25,6 @@ interface Ticket {
   ticketType?: string;
 }
 
-interface PageProps {
-  params: {
-    order_id: string;
-  };
-}
-
 export default function Page() {
   const { order_id } = useParams();
 
