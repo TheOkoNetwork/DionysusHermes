@@ -67,7 +67,6 @@ export default function Page() {
 
           if (data && data.id) {
             setOrder(data);
-            console.log(data);
           } else {
             setOrder(null); // Order not found
           }
