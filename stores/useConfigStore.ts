@@ -1,7 +1,14 @@
 // stores/useConfigStore.ts
 import { create } from "zustand";
 
-type Config = any; // or define your config type
+interface Config {
+  name: string;
+  slogan: string;
+  logo: string;
+  customer_identity_store_id: string;
+  facebook_url: string;
+  // Add other config properties as needed
+}
 
 interface ConfigState {
   config: Config | null;
