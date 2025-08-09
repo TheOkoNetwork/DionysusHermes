@@ -10,7 +10,7 @@ interface SalesChannelLookup {
   logo: string;
 }
 
-export async function GET(req: Request): Promise<void | Response> {
+export async function GET(req: Request): Promise<Response> {
   const domain = req.headers.get("host");
 
   if (!process.env.OLYMPUS_URL) {
