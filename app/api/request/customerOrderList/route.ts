@@ -8,7 +8,7 @@ interface CustomerOrder {
   order_key: string;
 }
 
-export async function GET(): Promise<Response>{
+export async function GET(): Promise<Response> {
   const session = await getServerSession(authOptions);
 
   console.log("Session:", session);
@@ -51,12 +51,14 @@ export async function GET(): Promise<Response>{
   } catch (error) {
     console.error("Error fetching list of orders:", error);
 
-    return new Response(JSON.stringify({
-      error: "Failed to fetch customer orders"
-    }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
-
+    return new Response(
+      JSON.stringify({
+        error: "Failed to fetch customer orders",
+      }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      },
+    );
   }
 }

@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
-  req: NextRequest, {
-  params,
-}: {
-  params: Promise<{  order_key: string }>
-}): Promise<NextResponse<unknown>> {
+  req: NextRequest,
+  {
+    params,
+  }: {
+    params: Promise<{ order_key: string }>;
+  },
+): Promise<NextResponse<unknown>> {
   try {
     const { order_key } = await params;
 

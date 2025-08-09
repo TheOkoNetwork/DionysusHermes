@@ -38,8 +38,12 @@ export default function OrdersPage() {
         .then(async (res) => {
           if (!res.ok) {
             const errorText = await res.text();
-            throw new Error(`Failed to fetch orders. Status: ${res.status} ${res.statusText}. Response: ${errorText}`);
+
+            throw new Error(
+              `Failed to fetch orders. Status: ${res.status} ${res.statusText}. Response: ${errorText}`,
+            );
           }
+
           return res.json();
         })
         .then((data) => {
