@@ -25,12 +25,6 @@ interface Ticket {
   ticketType?: string;
 }
 
-interface PageProps {
-  params: {
-    order_id: string;
-  };
-}
-
 export default function Page() {
   const { order_id } = useParams();
   console.log(`Using order_id: ${order_id}`)
@@ -67,7 +61,6 @@ export default function Page() {
 
           if (data && data.id) {
             setOrder(data);
-            console.log(data);
           } else {
             setOrder(null); // Order not found
           }
