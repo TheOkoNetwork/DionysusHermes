@@ -25,7 +25,7 @@ export async function GET(
   },
 ): Promise<NextResponse<unknown>> {
   const page_params = await params;
-  const order_id = page_params['order_id'][0];
+  const order_id = String(page_params['order_id']);
 
   console.log("order_id:", order_id)
   const session = await getServerSession(authOptions);
