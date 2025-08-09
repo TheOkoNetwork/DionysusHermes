@@ -8,7 +8,7 @@ interface CustomerOrder {
   order_key: string;
 }
 
-export async function GET(): Promise<void | Response>{
+export async function GET(): Promise<Response>{
   const session = await getServerSession(authOptions);
 
   console.log("Session:", session);
