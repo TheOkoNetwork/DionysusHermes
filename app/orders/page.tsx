@@ -9,6 +9,7 @@ import {
   TableCell,
 } from "@heroui/react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
 import { title } from "@/components/primitives";
@@ -22,12 +23,9 @@ interface Order {
   description: string;
 }
 
-const handleRowClick = (orderKey: string) => {
-  window.open(`/api/ticket_pdf/${orderKey}`, "_blank");
-};
-
 export default function OrdersPage() {
   const { data: session, status } = useSession();
+  const router = useRouter();
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -38,8 +36,12 @@ export default function OrdersPage() {
         .then(async (res) => {
           if (!res.ok) {
             const errorText = await res.text();
-            throw new Error(`Failed to fetch orders. Status: ${res.status} ${res.statusText}. Response: ${errorText}`);
+
+            throw new Error(
+              `Failed to fetch orders. Status: ${res.status} ${res.statusText}. Response: ${errorText}`,
+            );
           }
+
           return res.json();
         })
         .then((data) => {
@@ -52,6 +54,10 @@ export default function OrdersPage() {
         });
     }
   }, [session]);
+
+  const handleRowClick = (orderId: string) => {
+    router.push(`/orders/${orderId}`);
+  };
 
   if (status === "loading" || isLoading) {
     return <div>Loading...</div>;
@@ -84,7 +90,7 @@ export default function OrdersPage() {
           {orders.map((order) => (
             <TableRow
               key={order.id}
-              onClick={() => handleRowClick(order.order_key)}
+              onClick={() => handleRowClick(order.id)}
             >
               <TableCell>{order.id}</TableCell>
               {/* <TableCell>{new Date(order.date).toLocaleDateString()}</TableCell> */}

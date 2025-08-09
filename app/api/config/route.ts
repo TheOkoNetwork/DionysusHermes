@@ -1,5 +1,3 @@
-import type { NextApiResponse } from "next";
-
 import { config } from "dotenv";
 
 config();
@@ -49,11 +47,14 @@ export async function GET(req: Request): Promise<Response> {
   } catch (error) {
     console.error("Error looking up sales channel:", error);
 
-    return new Response(JSON.stringify({
-      error: "Failed to lookup sales channel"
-    }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({
+        error: "Failed to lookup sales channel",
+      }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      },
+    );
   }
 }
