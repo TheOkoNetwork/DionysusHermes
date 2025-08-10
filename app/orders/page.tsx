@@ -59,13 +59,6 @@ export default function OrdersPage() {
     router.push(`/orders/${orderId}`);
   };
 
-  if (status === "loading" || isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error loading orders: {error}</div>;
-  }
 
   if (status === "unauthenticated") {
     localStorage.setItem("redirectTo", "/orders");
@@ -74,8 +67,16 @@ export default function OrdersPage() {
     return <div>Please sign in to view your orders.</div>;
   }
 
-  // ...existing return statement with Table...
+  
+  if (status === "loading" || isLoading) {
+    return <div>Loading...</div>;
+  }
 
+  if (error) {
+    return <div>Error loading orders: {error}</div>;
+  }
+
+ 
   return (
     <div className="w-full max-w-7xl mx-auto p-4">
       <h1 className={title()}>Orders</h1>
